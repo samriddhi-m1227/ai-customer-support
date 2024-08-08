@@ -14,12 +14,14 @@ const systemPrompt = `You are an AI-powered customer support assistant for Heads
 Your goal is to provide accurate information, assist with common inquiries, and ensure a positive experience for all HeadstarterAI users.`;
 
 export async function POST(req) {
-  const openai = new OpenAI(); // Ensure you have the OpenAI API key configured
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
   const data = await req.json();
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o', // use whatever model works for you
+      model: 'gpt-4o-mini', // use whatever model works for you
       messages: [
         {
           role: 'system',

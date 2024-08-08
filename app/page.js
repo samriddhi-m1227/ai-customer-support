@@ -1,7 +1,7 @@
-
-'use client'
-import { Box, Button, Stack, TextField } from '@mui/material';
-import { useState } from 'react';
+'use client';
+import React, { useState } from 'react';
+import { Box, Button, Stack, TextField, useTheme, useMediaQuery, Typography } from '@mui/material';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -12,6 +12,9 @@ export default function Home() {
   ]);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Responsive hook
 
   const sendMessage = async () => {
     if (!message.trim() || isLoading) return;  // Don't send empty messages
@@ -81,21 +84,42 @@ export default function Home() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      bgcolor="#06091B"
+      p={2}
     >
       <Stack
-        direction={'column'}
-        width="500px"
-        height="700px"
+        direction="column"
+        width={isMobile ? '95%' : '95%'}
+        height={isMobile ? '95%' : '95%'}
         border="1px solid black"
+        borderRadius={2}
+        boxShadow={3}
         p={2}
         spacing={3}
+        bgcolor="whitesmoke"
       >
+        <Typography align="center" color= '#030303' fontSize= '24px' fontFamily= 'Roboto Mono' letterSpacing= '-0.6px' lineHeight= '32px' gutterBottom>
+          <SmartToyIcon fontSize='small'></SmartToyIcon> HeadstarterAI Support Hub
+        </Typography>
+
         <Stack
-          direction={'column'}
+          direction="column"
           spacing={2}
           flexGrow={1}
           overflow="auto"
           maxHeight="100%"
+          sx={{
+            '&::-webkit-scrollbar': {
+              width: '0.4em',
+            },
+            '&::-webkit-scrollbar-track': {
+              boxShadow: `inset 0 0 6px ${theme.palette.divider}`,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: theme.palette.primary.main,
+              borderRadius: '10px',
+            },
+          }}
         >
           {messages.map((message, index) => (
             <Box
@@ -112,15 +136,17 @@ export default function Home() {
                     : 'secondary.main'
                 }
                 color="white"
-                borderRadius={16}
-                p={3}
+                borderRadius={2}
+                p={2}
+                maxWidth="80%"
               >
                 {message.content}
               </Box>
             </Box>
           ))}
         </Stack>
-        <Stack direction={'row'} spacing={2}>
+        
+        <Stack direction="row" spacing={2}>
           <TextField
             label="Message"
             fullWidth
