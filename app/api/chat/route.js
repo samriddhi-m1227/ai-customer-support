@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { Pinecone } from '@pinecone-database/pinecone';
-
-const pc = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY,
-});
 
 const systemPrompt = `You are an AI-powered customer support assistant for HeadstarterAI, a platform that provides AI-driven interviews for software engineering positions.
 
