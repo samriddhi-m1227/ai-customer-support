@@ -14,10 +14,19 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Responsive hook
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const formatResponse = (content) => {
+    // Basic formatting example - you can expand this based on your needs
+    return content
+      .replace(/### (.+)/g, '<strong>$1</strong>') // Bold headers
+      .replace(/\*\*(.+?)\*\*/g, '<em>$1</em>')    // Italics for emphasis
+      .replace(/- (.+)/g, '<li>$1</li>')            // List items
+      .replace(/\n/g, '<br />');                    // Line breaks
+  };
 
   const sendMessage = async () => {
-    if (!message.trim() || isLoading) return;  // Don't send empty messages
+    if (!message.trim() || isLoading) return;
     setIsLoading(true);
 
     setMessages((prevMessages) => [
@@ -34,7 +43,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages: [...messages, { role: 'user', content: message }] }), // Properly format request body
+        body: JSON.stringify({ messages: [...messages, { role: 'user', content: message }] }),
       });
 
       if (!response.ok) {
@@ -50,11 +59,14 @@ export default function Home() {
         if (done) break;
         result += decoder.decode(value, { stream: true });
 
-        // Update the assistant's message incrementally
+        // Update the assistant's message incrementally and format it
         setMessages((prevMessages) => {
           const lastMessageIndex = prevMessages.length - 1;
           const updatedMessages = [...prevMessages];
-          updatedMessages[lastMessageIndex] = { ...updatedMessages[lastMessageIndex], content: result };
+          updatedMessages[lastMessageIndex] = { 
+            ...updatedMessages[lastMessageIndex], 
+            content: formatResponse(result) 
+          };
           return updatedMessages;
         });
       }
@@ -140,7 +152,7 @@ export default function Home() {
                 p={2}
                 maxWidth="80%"
               >
-                {message.content}
+                <Typography dangerouslySetInnerHTML={{ __html: message.content }} />
               </Box>
             </Box>
           ))}
@@ -152,12 +164,12 @@ export default function Home() {
             fullWidth
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress} // Use the handleKeyPress function
+            onKeyPress={handleKeyPress} 
           />
           <Button 
             variant="contained" 
             onClick={sendMessage}
-            disabled={isLoading} // Disable button while loading
+            disabled={isLoading}
           >
             {isLoading ? 'Sending...' : 'Send'}
           </Button>
