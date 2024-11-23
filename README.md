@@ -1,4 +1,4 @@
-# AI Customer Support Bot
+# AI Customer Support
 
 An interactive customer support chatbot built with **Next.js**, **OpenAI API**, and **JavaScript**. This bot leverages OpenAI's powerful language model, customized with a system prompt to provide dynamic and accurate customer support responses through a sleek and user-friendly chat interface.
 
